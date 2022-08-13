@@ -1,0 +1,81 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<title>csvhash (CSVの指定項目SHA256ハッシュ化変換)</title>
+<script type="module">
+import { CSV } from "https://code4sabae.github.io/js/CSV.js";
+import { SJIS } from "https://code4sabae.github.io/js/SJIS.js";
+import { downloadZip } from "https://code4sabae.github.io/js/downloadZip.js";
+import { waitDropFiles } from "https://code4sabae.github.io/js/waitDropFiles.js";
+import { downloadTextFile } from "https://code4sabae.github.io/js/downloadTextFile.js";
+import { readAsArrayBufferAsync } from "https://code4sabae.github.io/js/readAsArrayBufferAsync.js";
+import { JISX0213 } from "https://code4fukui.github.io/mojikiban/JISX0213.js";
+import { SHA256 } from "https://code4fukui.github.io/SHA256/SHA256.js";
+import { Base16 } from "https://code4fukui.github.io/Base16/Base16.js";
+
+const convertHash = async (csv, colname) => {
+  const n = csv[0].indexOf(colname);
+  if (n < 0) {
+    throw new Error(`項目名"${colname}"がCSVデータに見つかりませんでした`);
+  }
+  for (let i = 1; i < csv.length; i++) {
+    csv[i][n] = Base16.encode(await SHA256.digest(csv[i][n]));
+  }
+  return csv;
+};
+
+window.onload = async () => {
+  for (;;) {
+    try {
+      divmain.innerHTML = "CSVファイルをドロップしてください";
+      const items = await waitDropFiles(divmain);
+      const files = [];
+      for (const item of items) {
+        // console.log(item.type); // ignore item.type in Windows
+        if (!item.file.name.endsWith(".csv")) {
+          throw new Error("ファイル形式が違います。CSVファイルをドロップしてください。");
+        }
+        const file = item.file;
+        const bin = await readAsArrayBufferAsync(file);
+        const data = SJIS.decodeAuto(new Uint8Array(bin));
+          const csv0 = CSV.decode(data);
+          const csv = await convertHash(csv0, colname.value);
+          const scsv = CSV.encode(csv);
+          files.push({ name: file.name, data: scsv });
+      }
+      if (files.length == 1) {
+        downloadTextFile(files[0]);
+      } else {
+        downloadZip("csvs.zip", files);
+      }
+    } catch (e) {
+      console.log(e);
+      alert(e.message);
+      //alert("CSVファイルの読み込みや変換に失敗しました。データが正常かご確認ください。");
+    }
+  }
+};
+</script>
+</head>
+<body>
+  
+<div class="jumbotron">
+  <h1 class="display-4">csvhash</h1>
+  <p class="lead">CSVファイルの指定項目をSHA256(英数64文字)でハッシュ化します（複数ファイル変換対応）</p>
+</div>
+
+<div class="mx-5">
+  <div id="divmain" class="border px-5 mx-auto pt-3 pb-3"></div>
+  <label>ハッシュ化する項目名<input type="text" id="colname" class="m-3" value="mail"></label>
+</div>
+
+<footer class="text-muted">
+  <div class="container my-4 mx-0">
+  <p>Design: <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a></p>
+  <p>Lib: <a href="https://github.com/code4fukui/SHA256">SHA256.js</a> (「<a href=https://www.cryptrec.go.jp/method.html>電子政府推奨暗号リスト - CRYPTREC暗号の仕様書</a>」掲載ハッシュ関数)</p>
+  <p>App: CC BY <a href="https://fukuno.jig.jp/3672">福野泰介の一日一創</a> by <a href="https://twitter.com/taisukef">@taisukef</a> (<a href=https://github.com/code4fukui/SHA512/>src on GitHub</a>)</p>
+  </div>
+</footer>
+
+</body>
+</html>
