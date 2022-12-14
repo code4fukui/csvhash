@@ -9,20 +9,7 @@ import { downloadZip } from "https://code4sabae.github.io/js/downloadZip.js";
 import { waitDropFiles } from "https://code4sabae.github.io/js/waitDropFiles.js";
 import { downloadTextFile } from "https://code4sabae.github.io/js/downloadTextFile.js";
 import { readAsArrayBufferAsync } from "https://code4sabae.github.io/js/readAsArrayBufferAsync.js";
-import { SHA256 } from "https://code4fukui.github.io/SHA256/SHA256.js";
-import { Base16 } from "https://code4fukui.github.io/Base16/Base16.js";
-
-const convertHash = async (csv, colname, salt = "") => {
-  const n = csv[0].indexOf(colname);
-  console.log(csv[0], n);
-  if (n < 0) {
-    throw new Error(`項目名"${colname}"がCSVデータに見つかりませんでした`);
-  }
-  for (let i = 1; i < csv.length; i++) {
-    csv[i][n] = Base16.encode(await SHA256.digest(csv[i][n] + salt));
-  }
-  return csv;
-};
+import { convertHash } from "./convertHash.js";
 
 window.onload = async () => {
   for (;;) {
