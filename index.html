@@ -12,13 +12,14 @@ import { readAsArrayBufferAsync } from "https://code4sabae.github.io/js/readAsAr
 import { SHA256 } from "https://code4fukui.github.io/SHA256/SHA256.js";
 import { Base16 } from "https://code4fukui.github.io/Base16/Base16.js";
 
-const convertHash = async (csv, colname) => {
+const convertHash = async (csv, colname, salt = "") => {
   const n = csv[0].indexOf(colname);
+  console.log(csv[0], n);
   if (n < 0) {
     throw new Error(`項目名"${colname}"がCSVデータに見つかりませんでした`);
   }
   for (let i = 1; i < csv.length; i++) {
-    csv[i][n] = Base16.encode(await SHA256.digest(csv[i][n]));
+    csv[i][n] = Base16.encode(await SHA256.digest(csv[i][n] + salt));
   }
   return csv;
 };
@@ -36,11 +37,11 @@ window.onload = async () => {
         }
         const file = item.file;
         const bin = await readAsArrayBufferAsync(file);
-        const data = SJIS.decodeAuto(new Uint8Array(bin));
-          const csv0 = CSV.decode(data);
-          const csv = await convertHash(csv0, colname.value);
-          const scsv = CSV.encode(csv);
-          files.push({ name: file.name, data: scsv });
+        const data = new TextDecoder().decode(bin); // SJIS.decodeAuto(new Uint8Array(bin));
+        const csv0 = CSV.decode(data);
+        const csv = await convertHash(csv0, colname.value, salt.value);
+        const scsv = CSV.encode(csv);
+        files.push({ name: file.name, data: scsv });
       }
       if (files.length == 1) {
         downloadTextFile(files[0]);
@@ -54,6 +55,13 @@ window.onload = async () => {
     }
   }
 };
+btnsecret.onclick = () => {
+  const bin = new Uint8Array(16);
+  for (let i = 0; i < bin.length; i++) {
+    bin[i] = Math.random() * 256;
+  }
+  salt.value = Base16.encode(bin);
+};
 </script>
 </head>
 <body>
@@ -66,6 +74,8 @@ window.onload = async () => {
 <div class="mx-5">
   <div id="divmain" class="border px-5 mx-auto pt-3 pb-3"></div>
   <label>ハッシュ化する項目名<input type="text" id="colname" class="m-3" value="mail"></label>
+  <label>シークレット<input type="text" size=40 id="salt" class="m-3" value=""></label>
+  <button id=btnsecret>シークレット生成</button>
 </div>
 
 <footer class="text-muted">
