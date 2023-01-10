@@ -16,6 +16,17 @@
 deno run -A https://code4fukui.github.io/csvhash/csvhash.js data.csv メールアドレス 123456
 ```
 
+## テストコード
+
+[test.js](test.js)
+```
+$ deno test -A
+running 2 tests from ./test.js
+no salt ... ok (6ms)
+with salt ... ok (5ms)
+ok | 2 passed | 0 failed (41ms)
+```
+
 ## dependency
 
 - [SHA256](https://github.com/code4fukui/SHA256)
