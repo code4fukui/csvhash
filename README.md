@@ -13,13 +13,13 @@
 - シークレット: 123456
 
 ```sh
-deno run -A https://code4fukui.github.io/csvhash/csvhash.js data.csv メールアドレス 123456
+$ deno run -A https://code4fukui.github.io/csvhash/csvhash.js data.csv メールアドレス 123456
 ```
 
 ## テストコード
 
 [test.js](test.js)
-```
+```sh
 $ deno test -A
 running 2 tests from ./test.js
 no salt ... ok (6ms)
