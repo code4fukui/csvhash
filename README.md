@@ -1,5 +1,7 @@
 # csvhash
 
+> 日本語のREADMEはこちらです: [README.ja.md](README.ja.md)
+
 csvhash is a tool that allows you to hash specified columns of a CSV file using SHA256 encryption.
 
 ## Features
