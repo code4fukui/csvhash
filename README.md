@@ -1,34 +1,44 @@
-# csvhash (CSVの指定項目SHA256ハッシュ化変換)
+# csvhash
 
-- [csvhash](https://code4fukui.github.io/csvhash/)
+csvhash is a tool that allows you to hash specified columns of a CSV file using SHA256 encryption.
 
-ドロップしたCSVファイルの指定項目をSHA256(英数64文字)でハッシュ化します（複数ファイル変換対応）
+## Features
+- Hashes the specified column in a CSV file using SHA256 encryption
+- Supports multiple CSV files
+- Allows you to specify a salt for the hashing process
 
-## ツールでハッシュ化する方法
+## Requirements
+- [Deno](https://deno.land/) - a modern, secure, and fast JavaScript and TypeScript runtime
 
-[Deno](https://deno.land/)をインストール
+## Usage
 
-- データファイル: data.csv
-- ハッシュ化する項目名: メールアドレス
-- シークレット: 123456
+To use the tool, follow these steps:
+
+1. Install Deno.
+2. Run the following command:
+
+   ```sh
+   deno run -A https://code4fukui.github.io/csvhash/csvhash.js [filename] [colname] ([salt])
+   ```
+
+   - `[filename]`: The path to the CSV file.
+   - `[colname]`: The name of the column to be hashed.
+   - `[salt]` (optional): A secret string to be used as a salt for the hashing process.
+
+3. The hashed CSV data will be output to the console.
+
+## Test
+
+To run the test suite:
 
 ```sh
-$ deno run -A https://code4fukui.github.io/csvhash/csvhash.js data.csv メールアドレス 123456
+deno test -A
 ```
 
-## テストコード
-
-[test.js](test.js)
-```sh
-$ deno test -A
-running 2 tests from ./test.js
-no salt ... ok (6ms)
-with salt ... ok (5ms)
-ok | 2 passed | 0 failed (41ms)
-```
-
-## dependency
-
+## Dependencies
 - [SHA256](https://github.com/code4fukui/SHA256)
 - [Base16](https://github.com/code4fukui/Base16)
 - [CSV, SJIS](https://github.com/code4sabae/js)
+
+## License
+This project is licensed under the [MIT License](LICENSE).
