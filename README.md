@@ -43,4 +43,4 @@ deno test -A
 - [CSV, SJIS](https://github.com/code4sabae/js)
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+MIT License — see [LICENSE](LICENSE).
