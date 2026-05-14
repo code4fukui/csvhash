@@ -2,7 +2,7 @@
 
 CSVファイルの指定項目をSHA256でハッシュ化するコマンドラインツールおよびWebユーティリティ。
 
-**デモ:** [**https://code4fukui.github.io/csvhash/**](https://code4fukui.github.io/csvhash/)
+**デモ:** [**https://github.com/code4fukui/csvhash](https://code4fukui.github.io/csvhash/)
 
 ## 機能
 

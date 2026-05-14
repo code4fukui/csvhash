@@ -4,7 +4,7 @@
 
 A command-line tool and web utility to hash specified columns in a CSV file using SHA256.
 
-**Demo:** [**https://code4fukui.github.io/csvhash/**](https://code4fukui.github.io/csvhash/)
+**Demo:** [**https://github.com/code4fukui/csvhash](https://code4fukui.github.io/csvhash/)
 
 ## Features
 
